@@ -1,8 +1,8 @@
-# TP3
+# Orchestrus
 
-Remise le 10 août.
-
-
-* Étienne Boutet - boue2327
-* Guillaume Jean - jeag2602
-* Raphael Valois - valr2802
+Todo : 
+  - React -> VueJs 
+  - Go -> Python (not Worker)
+  - Gitlab CI -> Github CI
+  - ...
+  
