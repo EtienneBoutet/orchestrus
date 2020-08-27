@@ -1,0 +1,96 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #212121;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #333;
+  align-items: center;
+}
+
+.icon-label {
+  display: flex;
+  align-items: center;
+}
+
+.icon-label > span {
+  padding-left: 4px;
+}
+
+.icon-label > .disabled {
+  opacity: 0.7;
+}
+
+.MuiIcon-colorDisabled {
+  opacity: 0.7;
+}
+
+.images-header {
+  display: flex;
+  align-items: center;
+}
+
+.images-header > .MuiTypography-root {
+  margin: 0;
+}
+
+.images-header > .MuiButtonBase-root {
+  margin-left: 8px;
+}
+
+.worker-header {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.worker-header > * {
+  margin: 0 4px !important;
+}
+
+.ports-header {
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.ports-header > * {
+  margin: 0 !important;
+}
+
+.ports-row {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.ports-row > .MuiSvgIcon-root {
+  margin: 12px;
+}
+
+.port-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 100%;
+  width: 100%;
+}
+
+.port-list-item {
+  background-color: #333;
+  padding: 5px;
+  border-radius: 5px;
+}

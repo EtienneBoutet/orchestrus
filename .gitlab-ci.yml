@@ -1,0 +1,189 @@
+# code_quality:
+#     image: docker:stable
+#     variables:
+#       DOCKER_DRIVER: overlay2
+#       SP_VERSION: 0.85.6
+#     services:
+#       - docker:stable-dind
+#     script:
+#       - docker pull codeclimate/codeclimate
+#       - docker run
+#           --rm
+#           --env CODECLIMATE_CODE="$PWD"
+#           --volume "$PWD":/code
+#           --volume /var/run/docker.sock:/var/run/docker.sock
+#           --volume /tmp/cc:/tmp/cc
+#           codeclimate/codeclimate analyze
+
+# build_client:
+#     image: docker
+
+#     services:
+#         - docker:dind
+
+#     script:
+#         - cd Orchestrus/client
+#         - docker build -t thebodyboutet/tp3_client -f "Dockerfile" "."
+#         - docker login --username=thebodyboutet --password=$DOCKER_HUB_boue2327
+#         - docker push thebodyboutet/tp3_client
+
+# build_orchestrus:
+#     image: docker
+
+#     services:
+#         - docker:dind
+
+#     script:
+#         - cd Orchestrus/server/orchestrus
+#         - docker build -t thebodyboutet/tp3_orchestrus -f "Dockerfile" "."
+#         - docker login --username=thebodyboutet --password=$DOCKER_HUB_boue2327
+#         - docker push thebodyboutet/tp3_orchestrus
+
+# test_orchestrus:
+#     image: docker:19.03.12
+
+#     services:
+#         - docker:19.03.12-dind
+
+#     variables:
+#         SERVER_URL: http://localhost:1235
+#         DB_CONNEXION_URL: http://localhost:1234
+
+#     before_script:
+#         - docker run
+#             --rm
+#             --network=host
+#             --name orchestrus
+#             -v /var/run/docker.sock:/var/run/docker.sock
+#             -d
+#             -e DB_CONNEXION_URL="$DB_CONNEXION_URL"
+#             thebodyboutet/tp3_orchestrus
+
+#     script:
+#     - docker run
+#         --rm
+#         --network=host
+#         -v "$PWD/Orchestrus/server/orchestrus":/app
+#         -w /app
+#         -e SERVER_URL="$SERVER_URL"
+#         golang:1.14
+#         go test
+
+#     after_script:
+#         - docker stop orchestrus
+
+# build_db_connexion:
+#     image: docker
+
+#     services:
+#         - docker:dind
+
+#     script:
+#         - cd Orchestrus/server/db_connexion
+#         - docker build -t thebodyboutet/tp3_db_connexion -f "Dockerfile" "."
+#         - docker login --username=thebodyboutet --password=$DOCKER_HUB_boue2327
+#         - docker push thebodyboutet/tp3_db_connexion
+
+# test_db_connexion:
+#     image: docker:19.03.12
+
+#     services:
+#         - docker:19.03.12-dind
+    
+#     variables:
+#         POSTGRES_PORT: 5432
+#         POSTGRES_USER: postgres
+#         POSTGRES_DB: orchestrus
+#         POSTGRES_PASSWORD: postgres
+#         POSTGRES_HOST: 127.0.0.1
+#         DB_CONNEXION_URL: http://localhost:1234
+
+#     before_script:
+#         - docker run 
+#             --rm
+#             --network=host
+#             --name psql
+#             -v /var/run/docker.sock:/var/run/docker.sock
+#             -d
+#             -e POSTGRES_USER="$POSTGRES_USER"
+#             -e POSTGRES_DB="$POSTGRES_DB"
+#             -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+#             postgres
+
+#         - docker run
+#             --rm
+#             --network=host
+#             --name db_connexion
+#             -v /var/run/docker.sock:/var/run/docker.sock
+#             -d
+#             -e POSTGRES_HOST="$POSTGRES_HOST"
+#             -e POSTGRES_PORT="$POSTGRES_PORT"
+#             -e POSTGRES_USER="$POSTGRES_USER"
+#             -e POSTGRES_DB="$POSTGRES_DB"
+#             -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+#             thebodyboutet/tp3_db_connexion
+
+#     script:
+#         - docker run
+#             --rm
+#             --network=host
+#             -v "$PWD/Orchestrus/server/db_connexion":/app
+#             -w /app
+#             -e POSTGRES_HOST="$POSTGRES_HOST"
+#             -e POSTGRES_PORT="$POSTGRES_PORT"
+#             -e POSTGRES_USER="$POSTGRES_USER"
+#             -e POSTGRES_DB="$POSTGRES_DB"
+#             -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+#             -e DB_CONNEXION_URL="$DB_CONNEXION_URL"
+#             golang:1.14
+#             go test
+
+
+#     after_script:
+#         - docker stop db_connexion
+#         - docker stop psql
+
+# build_worker:
+#     image: docker
+
+#     services:
+#         - docker:dind
+
+#     script:
+#         - cd Orchestrus/worker
+#         - docker build -t thebodyboutet/tp3_worker -f "dockerfile" "."
+#         - docker login --username=thebodyboutet --password=$DOCKER_HUB_boue2327
+#         - docker push thebodyboutet/tp3_worker
+
+# test_worker:
+#     image: docker:19.03.12
+
+#     services:
+#         - docker:19.03.12-dind
+
+#     variables:
+#         WORKER_URL: http://localhost:5000
+#         HTTPD_URL: http://localhost:8080
+
+#     before_script:
+#         - docker run
+#             --rm
+#             --network=host
+#             --name worker
+#             -v /var/run/docker.sock:/var/run/docker.sock
+#             -d
+#             thebodyboutet/tp3_worker
+
+#     script:
+#         - docker run
+#             --rm
+#             --network=host
+#             -v "$PWD/Orchestrus/worker":/app
+#             -w /app
+#             -e WORKER_URL="$WORKER_URL"
+#             -e HTTPD_URL="$HTTPD_URL"
+#             golang:1.14
+#             go test
+
+#     after_script:
+#         - docker stop worker
