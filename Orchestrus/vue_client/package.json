@@ -1,0 +1,18 @@
+{
+  "name": "vue_client",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "buefy": "^0.9.2",
+    "vue": "^3.0.0-rc.1",
+    "vue-material": "^1.0.0-beta-15",
+    "vuetify": "^2.3.10"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.0-rc.1",
+    "vite": "^1.0.0-rc.1"
+  }
+}
