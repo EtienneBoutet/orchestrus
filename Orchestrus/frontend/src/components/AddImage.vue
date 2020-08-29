@@ -12,13 +12,19 @@
     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Add a worker</span>
+        <span class="headline">Add an image</span>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="12">
-              <v-text-field label="IP" v-model="ip" required></v-text-field>
+              <v-text-field label="Name" v-model="name" required></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field label="Public Port" v-model="publicPort" required></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field label="Local Port" v-model="localPort" required></v-text-field>
             </v-col>
           </v-row>
         </v-container>
@@ -26,7 +32,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="showSelf = false">Close</v-btn>
-        <v-btn color="blue darken-1" text @click="addWorker">Add</v-btn>
+        <v-btn color="blue darken-1" text @click="addImage">Add</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -35,23 +41,31 @@
 <script>
 
 export default {
-  name: "AddWorker",
+  name: "AddImage",
+  props: {
+    worker: Object
+  },
   data () {
     return {
       showSelf: false,
-      ip: "",
+      name: "",
+      publicPort: "",
+      localPort: ""
     }
   },
   methods: {
-    addWorker: function () {
+    addImage: function () {
       
       // Do stuff about adding.
       // Create axios request
 
+      let id = ""
 
-      this.$emit("added", this.ip)
+      this.$emit("added", {worker: this.worker, name: this.name, id: id, publicPort: this.publicPort, localPort: this.localPort})
 
-      this.ip = ""
+      this.name = ""
+      this.publicPort = ""
+      this.localPort = ""
       this.showSelf = false
     }
   }

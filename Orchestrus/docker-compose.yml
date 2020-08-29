@@ -54,12 +54,6 @@ services:
     volumes: 
         - /var/run/docker.sock:/var/run/docker.sock
 
-  worker2:
-    image: thebodyboutet/tp3_worker
-    restart: always
-    volumes: 
-        - /var/run/docker.sock:/var/run/docker.sock
-
   client:
     image: thebodyboutet/tp3_client
     restart: always
