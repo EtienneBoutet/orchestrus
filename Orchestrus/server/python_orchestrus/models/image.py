@@ -1,5 +1,3 @@
-import json
-
 class ImageModel:
   def __init__(self, host, id, name, port):
     self.host = host
