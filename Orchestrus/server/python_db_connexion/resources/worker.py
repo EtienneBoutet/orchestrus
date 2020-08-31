@@ -1,32 +1,27 @@
 from flask_restful import Resource, reqparse
 from models.worker import Worker
-import requests
+from db import db
 
-class Worker(Resource):
+class GetWorker(Resource):
+  def get(self):
+    try:
+      return [worker.json() for worker in Worker.query.all()], 200
+    except Exception:
+      return "Could not fetch workers from the DB.", 400
+
+class PostWorker(Resource):
   parser = reqparse.RequestParser()
-  parser.add_argument('ip', type=str, required=True, help="The IP is required.")
+  parser.add_argument('ip', type=str, required=True, help="The ip is required.")
+  parser.add_argument('active', type=bool, required=True, help="The active status is required.")
 
   def post(self):
-    data = Worker.parser.parse_args()
-    worker = Worker(data['ip'], False, [])
+    data = PostWorker.parser.parse_args()
+    worker = Worker(data['ip'], data['active'])
 
-    # Check if worker is active
-    response = requests.get("http://" + worker.ip + ":5000/")
-    if response.status_code == '204':
-      worker.active = True
+    try:
+      db.session.add(worker)
+      db.session.commit()
 
-    return worker.json(), 201
-
-class DeleteWorker(Resource):
-  def delete(self, host, id):
-    # Verify that the host is reachable
-    response = requests.get("http://" + host + ":5000/")
-    if response.status_code != '204':
-      return "The host is unreachable.", 404
-
-    # Send image deletion to host worker
-    response = requests.delete("http://" + host + "/images/" + id)
-    if response.status_code != '204':
-      return "Error from host worker", 500
-
-    # TODO - Remove image from database 
+      return worker.json(), 201
+    except Exception as e:
+      return "Could not add this worker to the DB.", 400

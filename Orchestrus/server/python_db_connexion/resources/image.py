@@ -1,28 +1,41 @@
 from flask_restful import Resource, reqparse
 from models.image import Image
-import requests
+from models.worker import Worker
+from db import db
 
-# TODO - Better error handling 
-
-class Image(Resource):
+class AddImage(Resource):
   parser = reqparse.RequestParser()
-  parser.add_argument('host', type=str, required=True, help="The host is required.")
+  parser.add_argument('id', type=str, required=True, help="The host is required.")
   parser.add_argument('name', type=str, required=True, help="The image name is required.")
   parser.add_argument('port', type=dict, required=True, help="The image port is required.")
 
-  def post(self):
-    data = Image.parser.parse_args()
-    image = Image(data['host'], None, data['name'], data['port'])
+  def post(self, host):
+    data = AddImage.parser.parse_args()
+    image = Image(host, data['id'], data['name'], data['port'])
 
-    # Verify that the host is reachable
-    response = requests.get("http://" + image.host + ":5000/")
-    if response.status_code != '204':
-      return "The host is unreachable.", 404
+    try:
+      db.session.add(image)
+      db.session.commit()
 
-    # Send image information to host worker
-    response = requests.post("http://" + image.host + ":5000/images", json=image.json(), timeout=1.5)
-    if response.status_code == '201':
-      # TODO - Add the ID to the image
       return image.json(), 201
-    else:
-      return "Error from host worker", 500
+    except Exception as e:
+      print(e)
+      return "Could not add this image to the DB", 400
+
+class RemoveImage(Resource):
+  def delete(self, host, id):
+    try:
+      worker = Worker.query.filter_by(ip=host).first()
+      
+      related_image = None
+      for image in worker.images:
+        if image.id == id:
+          related_image = image
+
+      db.session.delete(related_image)
+      db.session.commit()
+
+      return related_image.json(), 204
+    except Exception as e:
+      print(e)
+      return "Could not delete image from the DB", 400
