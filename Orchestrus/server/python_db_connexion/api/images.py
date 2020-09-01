@@ -42,3 +42,12 @@ def add_image(ip):
   db.session.commit()
 
   return image
+
+# @registry.handles(
+#   rule="/workers/<string:ip>/images/<string:id>",
+#   method="POST",
+#   request_body_schema=CreateImageSchema(),
+#   response_body_schema={
+#     200: ImageSchema()
+#   }
+# )
