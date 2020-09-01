@@ -19,7 +19,7 @@ def add_image(ip):
 
   # Verify that worker exists
   worker = Worker.query.filter_by(ip=ip).first()
-  if worker is not None:
+  if worker is None:
     raise errors.UnprocessableEntity("This worker does not exists.")
 
   # Fields handling
