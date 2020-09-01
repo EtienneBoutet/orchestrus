@@ -27,12 +27,17 @@ def workers_list():
 def create_worker():
   body = flask_rebar.get_validated_body()
 
-  worker = Worker.query.filter_by(ip=body["ip"]).first()
+  ip = body["ip"]
+
+  if not ip:
+    raise errors.UnprocessableEntity("Please add an IP.") 
+
+  worker = Worker.query.filter_by(ip=ip).first()
   
   if worker is not None:
     raise errors.UnprocessableEntity("This worker already exists.")
 
-  worker = Worker(body["ip"], body["active"])
+  worker = Worker(ip, body["active"])
 
   db.session.add(worker)
   db.session.commit()
