@@ -20,8 +20,6 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 # Endpoints
-# api.add_resource(PostWorker, '/workers')
-
 # api.add_resource(AddImage, '/workers/<string:host>/images')
 # api.add_resource(RemoveImage, '/workers/<string:host>/images/<string:id>')
 

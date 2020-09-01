@@ -7,3 +7,9 @@ class ImageSchema(Schema):
   name = fields.String(required=True)
   port = fields.Raw(required=True)
   worker_ip = fields.Integer(required=True)
+
+class CreateImageSchema(Schema):
+  """Schema for adding an image"""
+  id = fields.Integer(required=True)
+  name = fields.String(required=True)
+  port = fields.Raw(required=True)
