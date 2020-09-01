@@ -29,8 +29,6 @@ def create_worker():
 
   worker = Worker.query.filter_by(ip=body["ip"]).first()
   
-  print(worker)
-  
   if worker is not None:
     raise errors.UnprocessableEntity("This worker already exists.")
 
