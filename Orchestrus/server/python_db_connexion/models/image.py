@@ -6,7 +6,7 @@ class Image(db.Model):
   __tablename__ = "images"
   id = db.Column(db.Text, primary_key=True, autoincrement=False)
   name = db.Column(db.Text, nullable=False)
-  port = db.Column(JSON)  
+  port = db.Column(JSON)
   worker_ip = db.Column(db.Text, db.ForeignKey('worker.ip'), nullable=False)
 
   def __init__(self, worker_ip, id, name, port):
