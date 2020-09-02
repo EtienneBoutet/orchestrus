@@ -1,5 +1,5 @@
-class WorkerModel:
-  def __init__(self, ip, active, images):
+class Worker:
+  def __init__(self, ip, active, images=[]):
     self.ip = ip
     self.active = active
     self.images = images
