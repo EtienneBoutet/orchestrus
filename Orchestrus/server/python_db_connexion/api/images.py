@@ -43,11 +43,21 @@ def add_image(ip):
 
   return image
 
-# @registry.handles(
-#   rule="/workers/<string:ip>/images/<string:id>",
-#   method="POST",
-#   request_body_schema=CreateImageSchema(),
-#   response_body_schema={
-#     200: ImageSchema()
-#   }
-# )
+@registry.handles(
+  rule="/workers/<string:ip>/images/<string:id>",
+  method="DELETE"
+)
+def delete_image(ip, id):
+  worker = Worker.query.filter_by(ip=ip).first()
+  if worker is None:
+    raise errors.UnprocessableEntity("This worker does not exists.")
+
+  image = Image.query.filter_by(worker_ip=ip, id=id).first()
+  if image is None:
+    raise errors.UnprocessableEntity("This image does not exists.")
+
+  db.session.delete(image)
+  db.session.commit()
+
+  # Flask require me to return something
+  return 'OK'
