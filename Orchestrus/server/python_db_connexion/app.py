@@ -5,13 +5,12 @@ from flask_migrate import Migrate
 from models.image import Image
 from models.worker import Worker
 from api import workers, images
+from config import Config
 
 # Config and app starter related 
 app = Flask(__name__)
 
-# TODO - Better config and clean up this file
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/orchestrus"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(Config)
 
 migrate = Migrate(app, db)
 
