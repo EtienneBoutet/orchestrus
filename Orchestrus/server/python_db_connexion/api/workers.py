@@ -43,3 +43,5 @@ def create_worker():
   db.session.commit()
 
   return worker
+
+# TODO - Remove a worker

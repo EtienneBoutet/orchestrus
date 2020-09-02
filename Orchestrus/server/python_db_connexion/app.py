@@ -13,10 +13,10 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/orchestrus"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-REBAR.init_app(app)
-
-# TODO - Fix pour utiliser les schemas pour les migrations et non les modèles
 migrate = Migrate(app, db)
+
+migrate.init_app(app)
+REBAR.init_app(app)
 db.init_app(app)
 
 if __name__ == '__main__':
