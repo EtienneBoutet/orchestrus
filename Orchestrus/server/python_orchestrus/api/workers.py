@@ -6,6 +6,7 @@ from models.worker import Worker
 import requests
 from app import Config
 import helpers
+import json
 
 @registry.handles(
   rule="/workers",
@@ -28,9 +29,9 @@ def add_worker():
   worker = Worker(ip, isActive)
 
   # Add to database
-  response = requests.delete("http://" + Config.DB_MODULE_URL + "/workers", json=worker.json())
-  if response.status_code != '200':
-    raise errors.UnprocessableEntity("The image could not be added to the database.")
+  response = requests.post("http://" + Config.DB_MODULE_URL + "/workers", json=worker.json())
+  if response.status_code != 200:
+    raise errors.UnprocessableEntity("The worker could not be added to the database.")
 
   return worker
 
@@ -43,4 +44,4 @@ def add_worker():
 )
 def workers_list():
   response = requests.get("http://" + Config.DB_MODULE_URL + "/workers")
-  return response.text
+  return json.loads(response.content)

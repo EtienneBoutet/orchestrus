@@ -12,3 +12,4 @@ class CreateWorkerSchema(Schema):
   """Schema for creating a worker"""
   ip = fields.String(required=True)
   active = fields.Boolean(required=True)
+  images = fields.List(fields.Nested(ImageSchema))
